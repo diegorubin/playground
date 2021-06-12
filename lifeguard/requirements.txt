@@ -1,0 +1,4 @@
+lifeguard==0.0.15
+lifeguard-tinydb==0.0.3
+lifeguard-simple-dashboard==0.0.2
+requests==2.25.0
