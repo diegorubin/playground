@@ -1,6 +1,7 @@
 """
 Dynamic validations
 """
+from datetime import datetime
 import requests
 
 from lifeguard import NORMAL, PROBLEM, change_status
@@ -8,12 +9,26 @@ from lifeguard.actions.database import save_result_into_database
 from lifeguard.logger import lifeguard_logger as logger
 from lifeguard.validations import ValidationResponse, validation
 
+from lifeguard_tinydb.repositories import DATABASE
+
 validation_params = {}
 
 urls = [
     {"description": "my site", "url": "https://diegorubin.dev"},
     {"description": "pudim", "url": "http://pudim.com.br"},
 ]
+
+
+def append_to_history(validation_result, _settings):
+    history = DATABASE.table("history")
+    history.insert(
+        {
+            "validation_name": validation_result.validation_name,
+            "status": validation_result.status,
+            "details": validation_result.details,
+            "created_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M"),
+        }
+    )
 
 
 def validate_url(url, description):
@@ -40,7 +55,7 @@ for url in urls:
     validation_function.__name__ = url["description"].replace(" ", "_")
     validation(
         description=url["description"],
-        actions=[save_result_into_database],
+        actions=[save_result_into_database, append_to_history],
         schedule={"every": {"minutes": 1}},
         settings=None,
     )(validation_function)
