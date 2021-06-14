@@ -26,7 +26,7 @@ def append_to_history(validation_result, _settings):
             "validation_name": validation_result.validation_name,
             "status": validation_result.status,
             "details": validation_result.details,
-            "created_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M"),
+            "created_at": datetime.utcnow(),
         }
     )
 
