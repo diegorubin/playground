@@ -9,7 +9,7 @@ from lifeguard.actions.database import save_result_into_database
 from lifeguard.logger import lifeguard_logger as logger
 from lifeguard.validations import ValidationResponse, validation
 
-from lifeguard_tinydb.repositories import DATABASE
+from lifeguard_mongodb.repositories import DATABASE
 
 validation_params = {}
 
@@ -20,8 +20,8 @@ urls = [
 
 
 def append_to_history(validation_result, _settings):
-    history = DATABASE.table("history")
-    history.insert(
+    history = DATABASE.history
+    history.insert_one(
         {
             "validation_name": validation_result.validation_name,
             "status": validation_result.status,
